@@ -44,6 +44,7 @@ enum class ModbusRegisterType : uint8_t {
   DISCRETE_INPUT = 0x02,
   HOLDING = 0x03,
   READ = 0x04,
+  SNIFFER = 0xFF,
 };
 
 enum class SensorValueType : uint8_t {
@@ -74,6 +75,7 @@ inline ModbusFunctionCode modbus_register_read_function(ModbusRegisterType reg_t
     case ModbusRegisterType::HOLDING:
       return ModbusFunctionCode::READ_HOLDING_REGISTERS;
       break;
+    case ModbusRegisterType::SNIFFER:
     case ModbusRegisterType::READ:
       return ModbusFunctionCode::READ_INPUT_REGISTERS;
       break;
@@ -94,6 +96,7 @@ inline ModbusFunctionCode modbus_register_write_function(ModbusRegisterType reg_
       return ModbusFunctionCode::READ_WRITE_MULTIPLE_REGISTERS;
       break;
     case ModbusRegisterType::READ:
+    case ModbusRegisterType::SNIFFER:
     default:
       return ModbusFunctionCode::CUSTOM;
       break;
@@ -446,6 +449,8 @@ class ModbusController : public PollingComponent, public modbus::ModbusDevice {
   void on_modbus_error(uint8_t function_code, uint8_t exception_code) override;
   /// called when a modbus request (function code 3 or 4) was parsed without errors
   void on_modbus_read_registers(uint8_t function_code, uint16_t start_address, uint16_t number_of_registers) final;
+  /// called when a modbus sniffer request (function code 3 or 4) was parsed without errors
+  void on_modbus_sniffer_registers(uint8_t function_code, uint16_t start_address, uint16_t number_of_registers) final;
   /// default delegate called by process_modbus_data when a response has retrieved from the incoming queue
   void on_register_data(ModbusRegisterType register_type, uint16_t start_address, const std::vector<uint8_t> &data);
   /// default delegate called by process_modbus_data when a response for a write response has retrieved from the

@@ -25,10 +25,11 @@ CONF_ROLE = "role"
 CONF_MODBUS_ID = "modbus_id"
 CONF_SEND_WAIT_TIME = "send_wait_time"
 
-ModbusRole = modbus_ns.enum("ModbusRole")
+ModbusRole = modbus_ns.ModbusRole.enum("ModbusRole")
 MODBUS_ROLES = {
     "client": ModbusRole.CLIENT,
     "server": ModbusRole.SERVER,
+    "sniffer": ModbusRole.SNIFFER,
 }
 
 CONFIG_SCHEMA = (
@@ -76,7 +77,7 @@ def modbus_device_schema(default_address):
 
 
 def final_validate_modbus_device(
-    name: str, *, role: Literal["server", "client"] | None = None
+    name: str, *, role: Literal["server", "client", "sniffer"] | None = None
 ):
     def validate_role(value):
         assert role in MODBUS_ROLES

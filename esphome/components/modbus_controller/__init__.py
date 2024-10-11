@@ -74,6 +74,7 @@ MODBUS_REGISTER_TYPE = {
     **MODBUS_WRITE_REGISTER_TYPE,
     "discrete_input": ModbusRegisterType.DISCRETE_INPUT,
     "read": ModbusRegisterType.READ,
+    "sniffer": ModbusRegisterType.SNIFFER,
 }
 
 SensorValueType_ns = modbus_controller_ns.namespace("SensorValueType")
